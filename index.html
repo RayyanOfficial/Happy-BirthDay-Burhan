@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Surprise for Burhan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 50%, #0a0a0a 100%);
+            color: #fff;
+            min-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Animated floating particles background */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* Main container */
+        .container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Birthday popup card */
+        .birthday-card {
+            width: 90%;
+            max-width: 700px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 60px rgba(255, 215, 0, 0.15),
+                inset 0 0 20px rgba(255, 255, 255, 0.05);
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.8);
+            animation: scaleIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Glassmorphism effect overlay */
+        .birthday-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 215, 0, 0.02) 100%);
+            border-radius: 24px;
+            z-index: -1;
+        }
+
+        /* Neon golden glow border effect */
+        .birthday-card::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, 
+                rgba(255, 215, 0, 0) 0%,
+                rgba(255, 215, 0, 0.8) 25%,
+                rgba(255, 215, 0, 1) 50%,
+                rgba(255, 215, 0, 0.8) 75%,
+                rgba(255, 215, 0, 0) 100%);
+            border-radius: 26px;
+            z-index: -2;
+            filter: blur(10px);
+            animation: glow 3s infinite alternate ease-in-out;
+        }
+
+        /* Popup scale-in animation */
+        @keyframes scaleIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Neon glow animation */
+        @keyframes glow {
+            0% {
+                opacity: 0.4;
+                filter: blur(8px);
+            }
+            100% {
+                opacity: 0.8;
+                filter: blur(12px);
+            }
+        }
+
+        /* Title styling */
+        .title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            background: linear-gradient(to right, #FFD700, #FFEC8B, #FFD700);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            line-height: 1.2;
+        }
+
+        /* Message styling */
+        .message {
+            font-size: 1.5rem;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 300;
+            padding: 0 20px;
+        }
+
+        /* Highlight Burhan's name */
+        .name-highlight {
+            color: #FFD700;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Signature styling */
+        .signature {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #FFD700;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 215, 0, 0.3);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        }
+
+        /* Confetti canvas */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        /* Celebration emoji */
+        .emoji {
+            font-size: 3.5rem;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .emoji:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .emoji:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        /* Floating animation for emojis */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .birthday-card {
+                padding: 30px 20px;
+                width: 95%;
+            }
+            
+            .title {
+                font-size: 2.2rem;
+            }
+            
+            .message {
+                font-size: 1.3rem;
+                padding: 0 10px;
+            }
+            
+            .signature {
+                font-size: 1.5rem;
+            }
+            
+            .emoji {
+                font-size: 2.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .birthday-card {
+                padding: 25px 15px;
+            }
+            
+            .title {
+                font-size: 1.8rem;
+            }
+            
+            .message {
+                font-size: 1.1rem;
+            }
+            
+            .signature {
+                font-size: 1.3rem;
+            }
+            
+            .emoji {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated floating particles -->
+    <canvas id="particles"></canvas>
+    
+    <!-- Confetti canvas -->
+    <canvas id="confetti-canvas"></canvas>
+    
+    <div class="container">
+        <div class="birthday-card">
+            <h1 class="title">
+                <span class="emoji">🎉</span> Happy Birthday <span class="name-highlight">Burhan</span> <span class="emoji">🎉</span>
+            </h1>
+            
+            <p class="message">
+                Rayyan ki taraf se ek chhota sa modern digital surprise! 🎁
+Bro, humari 9 saal ki dosti — always strong & real 💪🤝
+May Allah bless you with success, happiness, and new beginnings 🌟🎯
+Aur haan… congratulations for scoring 88% in your Board exams! 🎓📚
+Super proud of you! Keep shining ✨🔥💛
+                <!-- "Rayyan ki taraf se ek modern surprise! 9 saal ki dosti… aur har saal tumhare saath aur strong. Stay blessed bro! ✨" -->
+            </p>
+            
+            <div class="signature">
+                - From Rayyan
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize particles and confetti when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initParticles();
+            initConfetti();
+            
+            // Start confetti animation with delay for dramatic effect
+            setTimeout(() => {
+                launchConfetti();
+            }, 800);
+        });
+
+        // Particle system for floating background effect
+        function initParticles() {
+            const canvas = document.getElementById('particles');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            // Particle array
+            const particles = [];
+            const particleCount = 80;
+            
+            // Particle class
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 2 + 0.5;
+                    this.speedX = Math.random() * 0.5 - 0.25;
+                    this.speedY = Math.random() * 0.5 - 0.25;
+                    this.color = `rgba(255, 215, 0, ${Math.random() * 0.3 + 0.1})`;
+                }
+                
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    
+                    // Boundary check
+                    if (this.x > canvas.width) this.x = 0;
+                    if (this.x < 0) this.x = canvas.width;
+                    if (this.y > canvas.height) this.y = 0;
+                    if (this.y < 0) this.y = canvas.height;
+                }
+                
+                draw() {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            
+            // Create particles
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+            
+            // Animation loop
+            function animateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                for (let particle of particles) {
+                    particle.update();
+                    particle.draw();
+                }
+                
+                requestAnimationFrame(animateParticles);
+            }
+            
+            animateParticles();
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        }
+
+        // Confetti system for celebration effect
+        function initConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            // Confetti array
+            const confetti = [];
+            const confettiColors = [
+                '#FFD700', // Gold
+                '#FFEC8B', // Light Gold
+                '#FFA500', // Orange
+                '#FFFFFF', // White
+                '#FF6B6B'  // Coral
+            ];
+            
+            // Confetti class
+            class ConfettiPiece {
+                constructor(x, y) {
+                    this.x = x;
+                    this.y = y;
+                    this.size = Math.random() * 10 + 5;
+                    this.speedX = Math.random() * 6 - 3;
+                    this.speedY = Math.random() * 5 + 3;
+                    this.color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+                    this.rotation = Math.random() * 360;
+                    this.rotationSpeed = Math.random() * 10 - 5;
+                    this.shape = Math.random() > 0.5 ? 'circle' : 'rect';
+                    this.gravity = 0.1;
+                    this.opacity = 1;
+                    this.fade = Math.random() * 0.02 + 0.005;
+                }
+                
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    this.speedY += this.gravity;
+                    this.rotation += this.rotationSpeed;
+                    this.opacity -= this.fade;
+                    
+                    return this.opacity > 0 && this.y < canvas.height;
+                }
+                
+                draw() {
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate(this.rotation * Math.PI / 180);
+                    ctx.globalAlpha = this.opacity;
+                    ctx.fillStyle = this.color;
+                    
+                    if (this.shape === 'circle') {
+                        ctx.beginPath();
+                        ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
+                        ctx.fill();
+                    } else {
+                        ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                    }
+                    
+                    ctx.restore();
+                }
+            }
+            
+            // Launch confetti from multiple positions
+            function launchConfetti() {
+                // Clear existing confetti
+                confetti.length = 0;
+                
+                // Create confetti from different positions
+                const launchPoints = [
+                    {x: canvas.width / 2, y: canvas.height / 2},
+                    {x: canvas.width / 4, y: canvas.height / 2},
+                    {x: canvas.width * 3/4, y: canvas.height / 2},
+                    {x: canvas.width / 2, y: canvas.height / 4}
+                ];
+                
+                // Add confetti pieces
+                for (let point of launchPoints) {
+                    for (let i = 0; i < 25; i++) {
+                        confetti.push(new ConfettiPiece(point.x, point.y));
+                    }
+                }
+                
+                // Start confetti animation
+                animateConfetti();
+            }
+            
+            // Confetti animation loop
+            function animateConfetti() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Update and draw confetti
+                for (let i = confetti.length - 1; i >= 0; i--) {
+                    const piece = confetti[i];
+                    
+                    if (piece.update()) {
+                        piece.draw();
+                    } else {
+                        confetti.splice(i, 1);
+                    }
+                }
+                
+                // Continue animation if there are still confetti pieces
+                if (confetti.length > 0) {
+                    requestAnimationFrame(animateConfetti);
+                }
+            }
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+            
+            // Make launchConfetti globally accessible
+            window.launchConfetti = launchConfetti;
+        }
+    </script>
+</body>
+</html>
